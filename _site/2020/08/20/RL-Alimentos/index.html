@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Predicción energía calórica en alimentos &middot; Portfolio
+    
+  </title>
+
+  
+  <link rel="canonical" href="http://localhost:4000/2020/08/20/RL-Alimentos/">
+  
+
+  <link rel="stylesheet" href="http://localhost:4000/public/css/poole.css">
+  <link rel="stylesheet" href="http://localhost:4000/public/css/syntax.css">
+  <link rel="stylesheet" href="http://localhost:4000/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://localhost:4000/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="http://localhost:4000/public/favicon.ico">
+
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="http://localhost:4000/atom.xml">
+
+  
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p>A reserved <a href="https://jekyllrb.com" target="_blank">Jekyll</a> theme that places the utmost gravity on content with a hidden drawer. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a>.</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="http://localhost:4000/">Home</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="http://localhost:4000/about/">About</a>
+        
+      
+    
+      
+    
+
+    <a class="sidebar-nav-item" href="/archive/v1.1.0.zip">Download</a>
+    <a class="sidebar-nav-item" href="">GitHub project</a>
+    <span class="sidebar-nav-item">Currently v1.1.0</span>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2020. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Home">Portfolio</a>
+            <small>Data Scientist</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Predicción energía calórica en alimentos</h1>
+  <span class="post-date">20 Aug 2020</span>
+  <h2 id="hipotesis">Hipotesis</h2>
+
+<p>Existe una relación entre la energia calorica y los nutrientes, vitaminas y minerales del alimento, en particular las grasas y los carbohidratos deberían ser los que más influyen en el contenido calórico del alimentos</p>
+
+<h2 id="teoría">Teoría</h2>
+
+<h3 id="energía-calórica">Energía Calórica</h3>
+
+<p>La energía que necesita nuestro organimsmo para poder mantener funcionando efectivamente todos los órganos y sistemas corporales proviene esencialmenmte de los alimentos que se consumen diariamente, particularmenete de aquellos nutrientes que proveen calorías (conocidos también como sustratos, macromoléculas o combustribles metabólicos), los cuales son: los hidratos de carbono, grasas y proteínas. La energía que poseen estos nutrientes se encuentra almacenada en forma química.</p>
+
+<h3 id="fuentes-de-energía-para-el-ser-humano">Fuentes de energía para el ser humano</h3>
+
+<p>Durante la digestión, los alimentos se degradan en hidratos de carbono, grasas y proteínas y eventualmente son absorbidos por la sangre a nivel intestinal. Una vez en el torrente sanguíneo serán empleados como sustratos en el metabolismo celular o almacvenados en el cuerpo. A nivel celular, estos sustratos son utilizados para la producción de energía.</p>
+
+<p>La energía derivada durante el metabolismo de los combustibles metabólicos se transforma en un estado molecular conocido como adenosina de trifosfato (ATP). El ATP es un compuesto de alta energía que producen las células al utilizar los nutrientes calóricos que provienen de las plantas y animales. Entonces, ¿cómo se libera la energía necesaria para las funciones biológicas de nuestro cuerpo?. Cuando el cuerpo demanda energía, este comuesto se descompone, produciendo así energía para las diferentes funciones vitales del cuerpo (e.g., contracción muscular, digestión, secreción glandular, reparación de tejidos, circulación, transmisión nerviosa, entre otras.).</p>
+
+<h3 id="unidad-de-medición-para-la-energía">Unidad de Medición para la Energía</h3>
+
+<p>La energía que potencialmente poseen los alimentos y la que se libera de los procesos bioquímicos se miede en términos de caloría (caloría pequeña) o kilocaloría (caloría grande). Estas son las unidades de calor utilizada para expresar el valor energético de los alimentos y del movimiento humano (ejercicios y actividad física).</p>
+
+<p>Una kilocaloría representa la cantidad de calor requerido para elevar la temperatura de un kilogramo (2.2 lbs ó 1 litro) de agua destilada a un grado Centírado (de 14° a 15.5 °C ), a nievel del mar (i.e., a una presión barométrica de 1 atmósfera ó 760 mm. Hg.).</p>
+
+<h2 id="limpieza-y-visualización-de-datos">Limpieza y Visualización de datos</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="n">px</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">food</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">"food.csv"</span><span class="p">)</span>
+<span class="n">food</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ID</th>
+      <th>FoodGroup</th>
+      <th>Descrip</th>
+      <th>CommonName</th>
+      <th>MfgName</th>
+      <th>ScientificName</th>
+      <th>Energy_kcal</th>
+      <th>Protein_g</th>
+      <th>Fat_g</th>
+      <th>Carb_g</th>
+      <th>...</th>
+      <th>Riboflavin_mg</th>
+      <th>Thiamin_mg</th>
+      <th>Calcium_mg</th>
+      <th>Copper_mcg</th>
+      <th>Iron_mg</th>
+      <th>Magnesium_mg</th>
+      <th>Manganese_mg</th>
+      <th>Phosphorus_mg</th>
+      <th>Selenium_mcg</th>
+      <th>Zinc_mg</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1001</td>
+      <td>Dairy and Egg Products</td>
+      <td>Butter, salted</td>
+      <td>No name</td>
+      <td>No name</td>
+      <td>No name</td>
+      <td>717.0</td>
+      <td>0.85</td>
+      <td>81.11</td>
+      <td>0.06</td>
+      <td>...</td>
+      <td>0.034</td>
+      <td>0.005</td>
+      <td>24.0</td>
+      <td>0.000</td>
+      <td>0.02</td>
+      <td>2.0</td>
+      <td>0.000</td>
+      <td>24.0</td>
+      <td>1.0</td>
+      <td>0.09</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1002</td>
+      <td>Dairy and Egg Products</td>
+      <td>Butter, whipped, with salt</td>
+      <td>No name</td>
+      <td>No name</td>
+      <td>No name</td>
+      <td>717.0</td>
+      <td>0.85</td>
+      <td>81.11</td>
+      <td>0.06</td>
+      <td>...</td>
+      <td>0.034</td>
+      <td>0.005</td>
+      <td>24.0</td>
+      <td>0.016</td>
+      <td>0.16</td>
+      <td>2.0</td>
+      <td>0.004</td>
+      <td>23.0</td>
+      <td>1.0</td>
+      <td>0.05</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1003</td>
+      <td>Dairy and Egg Products</td>
+      <td>Butter oil, anhydrous</td>
+      <td>No name</td>
+      <td>No name</td>
+      <td>No name</td>
+      <td>876.0</td>
+      <td>0.28</td>
+      <td>99.48</td>
+      <td>0.00</td>
+      <td>...</td>
+      <td>0.005</td>
+      <td>0.001</td>
+      <td>4.0</td>
+      <td>0.001</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>0.000</td>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1004</td>
+      <td>Dairy and Egg Products</td>
+      <td>Cheese, blue</td>
+      <td>No name</td>
+      <td>No name</td>
+      <td>No name</td>
+      <td>353.0</td>
+      <td>21.40</td>
+      <td>28.74</td>
+      <td>2.34</td>
+      <td>...</td>
+      <td>0.382</td>
+      <td>0.029</td>
+      <td>528.0</td>
+      <td>0.040</td>
+      <td>0.31</td>
+      <td>23.0</td>
+      <td>0.009</td>
+      <td>387.0</td>
+      <td>14.5</td>
+      <td>2.66</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1005</td>
+      <td>Dairy and Egg Products</td>
+      <td>Cheese, brick</td>
+      <td>No name</td>
+      <td>No name</td>
+      <td>No name</td>
+      <td>371.0</td>
+      <td>23.24</td>
+      <td>29.68</td>
+      <td>2.79</td>
+      <td>...</td>
+      <td>0.351</td>
+      <td>0.014</td>
+      <td>674.0</td>
+      <td>0.024</td>
+      <td>0.43</td>
+      <td>24.0</td>
+      <td>0.012</td>
+      <td>451.0</td>
+      <td>14.5</td>
+      <td>2.60</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 29 columns</p>
+</div>
+
+<p>Eliminaremos la columna llamada MfgName, ID y ScientificName ya que no afecta a nuestro análisis posterior.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">food</span><span class="p">.</span><span class="n">drop</span><span class="p">([</span><span class="s">"MfgName"</span><span class="p">,</span> <span class="s">"ScientificName"</span><span class="p">,</span> <span class="s">"ID"</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Revisaremos si vale la pena quedarse con la columna llamada CommonNames</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">elemento_masrepetido</span> <span class="o">=</span> <span class="n">food</span><span class="p">.</span><span class="n">CommonName</span><span class="p">.</span><span class="n">value_counts</span><span class="p">().</span><span class="n">idxmax</span><span class="p">()</span>
+<span class="n">repeticiones</span> <span class="o">=</span> <span class="n">food</span><span class="p">.</span><span class="n">CommonName</span><span class="p">.</span><span class="n">value_counts</span><span class="p">().</span><span class="nb">max</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s">f"""El elemento que más se repite es "</span><span class="si">{</span><span class="n">elemento_masrepetido</span><span class="si">}</span><span class="s">"
+Con una repetición de </span><span class="si">{</span><span class="n">repeticiones</span><span class="si">}</span><span class="s"> veces"""</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>El elemento que más se repite es "No name"
+Con una repetición de 7555 veces
+</code></pre></div></div>
+
+<p>Terminamos por eliminar también esta columna y eliminamos</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">food</span><span class="p">.</span><span class="n">drop</span><span class="p">(</span><span class="s">"CommonName"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">food</span><span class="p">.</span><span class="n">columns</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Index(['FoodGroup', 'Descrip', 'Energy_kcal', 'Protein_g', 'Fat_g', 'Carb_g',
+       'Sugar_g', 'Fiber_g', 'VitA_mcg', 'VitB6_mg', 'VitB12_mcg', 'VitC_mg',
+       'VitE_mg', 'Folate_mcg', 'Niacin_mg', 'Riboflavin_mg', 'Thiamin_mg',
+       'Calcium_mg', 'Copper_mcg', 'Iron_mg', 'Magnesium_mg', 'Manganese_mg',
+       'Phosphorus_mg', 'Selenium_mcg', 'Zinc_mg'],
+      dtype='object')
+</code></pre></div></div>
+
+<p>Podemos destacar que la unidad de medida de los nutrientes(vitaminas, minerales, etc.) varia, es decir algunos datos estan en gramos, microgramos o miligramos, para todo esto se transformara todo a miliogramos ya que es la unidad que más se repite.
+Para la utilización de algoritmos como regresión lineal no los ocupamos pero es posible que para clustering sea necesario además de normalizar cada uno de los datos.</p>
+
+<p>Ahora se cambiara el nombre de las columnas para que hagan referenia a la unidad mg</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">new_columnas</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">columnas</span> <span class="o">=</span> <span class="n">food</span><span class="p">.</span><span class="n">columns</span>
+
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columnas</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">col</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">"_g"</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">n_c</span> <span class="o">=</span> <span class="n">col</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">"_g"</span><span class="p">,</span> <span class="s">"_mg"</span><span class="p">)</span>
+        <span class="n">food</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">food</span><span class="p">[</span><span class="n">col</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">new_columnas</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">n_c</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">col</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">"_mcg"</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">n_c</span> <span class="o">=</span> <span class="n">col</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">"_mcg"</span><span class="p">,</span> <span class="s">"_mg"</span><span class="p">)</span>
+        <span class="n">food</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">food</span><span class="p">[</span><span class="n">col</span><span class="p">].</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">new_columnas</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">n_c</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">new_columnas</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+
+<span class="n">food</span><span class="p">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">new_columnas</span>
+
+</code></pre></div></div>
+
+<p>Por ultimo guardamos nuestro dataset</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">food</span><span class="p">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">"food_ML.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">food</span><span class="p">.</span><span class="n">FoodGroup</span><span class="p">.</span><span class="n">value_counts</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Beef Products                          946
+Vegetables and Vegetable Products      828
+Baked Products                         797
+Soups, Sauces, and Gravies             452
+Lamb, Veal, and Game Products          438
+Poultry Products                       390
+Legumes and Legume Products            389
+Fast Foods                             371
+Breakfast Cereals                      363
+Baby Foods                             362
+Sweets                                 347
+Fruits and Fruit Juices                346
+Pork Products                          343
+Beverages                              315
+Finfish and Shellfish Products         267
+Dairy and Egg Products                 264
+Sausages and Luncheon Meats            244
+Fats and Oils                          219
+Cereal Grains and Pasta                183
+Snacks                                 171
+American Indian/Alaska Native Foods    165
+Nut and Seed Products                  133
+Meals, Entrees, and Side Dishes        113
+Restaurant Foods                       108
+Spices and Herbs                        64
+Name: FoodGroup, dtype: int64
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">food</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">"food_ML.csv"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Considero que hay grupos de alimentos que deberían estar fuera del analisis, debido a que la mayoría de alimentos dentro de estoss grupos son altamente procesados. Se procederá a eliminar estos grupos</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">food</span><span class="p">.</span><span class="n">FoodGroup</span><span class="p">.</span><span class="n">value_counts</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Beef Products                          946
+Vegetables and Vegetable Products      828
+Baked Products                         797
+Soups, Sauces, and Gravies             452
+Lamb, Veal, and Game Products          438
+Poultry Products                       390
+Legumes and Legume Products            389
+Fast Foods                             371
+Breakfast Cereals                      363
+Baby Foods                             362
+Sweets                                 347
+Fruits and Fruit Juices                346
+Pork Products                          343
+Beverages                              315
+Finfish and Shellfish Products         267
+Dairy and Egg Products                 264
+Sausages and Luncheon Meats            244
+Fats and Oils                          219
+Cereal Grains and Pasta                183
+Snacks                                 171
+American Indian/Alaska Native Foods    165
+Nut and Seed Products                  133
+Meals, Entrees, and Side Dishes        113
+Restaurant Foods                       108
+Spices and Herbs                        64
+Name: FoodGroup, dtype: int64
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">grupos_eliminar</span> <span class="o">=</span> <span class="p">[</span><span class="s">"Fast Foods"</span><span class="p">,</span> <span class="s">"Breakfast Cereals"</span><span class="p">,</span> <span class="s">"Sweets"</span><span class="p">,</span> <span class="s">"Snacks"</span><span class="p">,</span>
+                   <span class="s">"American Indian/Alaska Native Foods"</span><span class="p">,</span>
+                   <span class="s">"Meals, Entrees, and Side Dishes"</span><span class="p">,</span> <span class="s">"Restaurant Foods"</span><span class="p">,</span>
+                   <span class="s">"Spices and Herbs"</span><span class="p">,</span> <span class="s">"Beverages"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">grupo</span> <span class="ow">in</span> <span class="n">grupos_eliminar</span><span class="p">:</span>
+    <span class="n">condicion</span> <span class="o">=</span> <span class="n">food</span><span class="p">.</span><span class="n">FoodGroup</span> <span class="o">==</span> <span class="n">grupo</span>
+    <span class="n">food</span><span class="p">.</span><span class="n">drop</span><span class="p">(</span><span class="n">food</span><span class="p">[</span><span class="n">condicion</span><span class="p">].</span><span class="n">index</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Ahora se usara un scaterplot para observar si es posible que existan correlaciones entre los nutrientes y la cantidad energética</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_var</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Protein_mg'</span><span class="p">,</span> <span class="s">'Fat_mg'</span><span class="p">,</span> <span class="s">'Carb_mg'</span><span class="p">,</span> <span class="s">'Sugar_mg'</span><span class="p">,</span> <span class="s">'Fiber_mg'</span><span class="p">]</span>
+<span class="n">x_var1</span> <span class="o">=</span> <span class="p">[</span><span class="s">'VitA_mg'</span><span class="p">,</span> <span class="s">'VitB6_mg'</span><span class="p">,</span> <span class="s">'VitB12_mg'</span><span class="p">,</span> <span class="s">'VitC_mg'</span><span class="p">,</span> <span class="s">'VitE_mg'</span><span class="p">]</span>
+<span class="n">y_var</span> <span class="o">=</span> <span class="p">[</span><span class="s">"Energy_kcal"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sns</span><span class="p">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">food</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s">"FoodGroup"</span><span class="p">,</span> <span class="n">y_vars</span><span class="o">=</span><span class="n">y_var</span><span class="p">,</span> <span class="n">x_vars</span><span class="o">=</span><span class="n">x_var</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">food</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s">"FoodGroup"</span><span class="p">,</span> <span class="n">y_vars</span><span class="o">=</span><span class="n">y_var</span><span class="p">,</span> <span class="n">x_vars</span><span class="o">=</span><span class="n">x_var1</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><img src="public/output_14_0.png" alt="png" /></p>
+
+<p><img src="public/output_14_1.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_var2</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Folate_mg'</span><span class="p">,</span> <span class="s">'Niacin_mg'</span><span class="p">,</span>
+          <span class="s">'Riboflavin_mg'</span><span class="p">,</span> <span class="s">'Thiamin_mg'</span><span class="p">,</span> <span class="s">'Calcium_mg'</span><span class="p">]</span>
+<span class="n">x_var3</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Copper_mg'</span><span class="p">,</span> <span class="s">'Iron_mg'</span><span class="p">,</span> <span class="s">'Magnesium_mg'</span><span class="p">,</span>
+          <span class="s">'Manganese_mg'</span><span class="p">,</span> <span class="s">'Phosphorus_mg'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sns</span><span class="p">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">food</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s">"FoodGroup"</span><span class="p">,</span> <span class="n">y_vars</span><span class="o">=</span><span class="n">y_var</span><span class="p">,</span> <span class="n">x_vars</span><span class="o">=</span><span class="n">x_var2</span><span class="p">)</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">food</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s">"FoodGroup"</span><span class="p">,</span> <span class="n">y_vars</span><span class="o">=</span><span class="n">y_var</span><span class="p">,</span> <span class="n">x_vars</span><span class="o">=</span><span class="n">x_var3</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><img src="public/output_16_0.png" alt="png" /></p>
+
+<p><img src="public/output_16_1.png" alt="png" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_var4</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Selenium_mg'</span><span class="p">,</span> <span class="s">'Zinc_mg'</span><span class="p">]</span>
+<span class="n">sns</span><span class="p">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">food</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s">"FoodGroup"</span><span class="p">,</span> <span class="n">y_vars</span><span class="o">=</span><span class="n">y_var</span><span class="p">,</span> <span class="n">x_vars</span><span class="o">=</span><span class="n">x_var4</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><img src="public/output_17_0.png" alt="png" /></p>
+
+<p>Al observar las gráficas podemos observar que existe una mayor correlación entre “Fat” y la energía, al inicio de la gráfica se encuentran un poco dispersos los datos, pienso que deben existir otras variables como los carbohidratos que pueden linealizar más la gráfica y e esta manera poder predecir la energía caloríca de una mejor manera.</p>
+
+<p>Las vitaminas y los minerales, además que la mayoría de los alimentos analizados tienen pocas cantidades, a simple vista observamos que no hay una correlación entre la energía y estos nutrientes.</p>
+
+<p>De cualquier manera, se usara seleccion cruzada para elegir las columnas importantes.</p>
+
+<h2 id="elección-y-entrenamiento-de-modelo">Elección y entrenamiento de modelo</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_absolute_error</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">r2_score</span>
+</code></pre></div></div>
+
+<p>Despues de varios entrenamientos me di cuenta que las columnas que más aportaban eran las proteínas, las grasas y los carbohidratos. Los coeficientes que proporcionaban las demás variables tendian a ser cero.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_var</span><span class="p">.</span><span class="n">pop</span><span class="p">()</span>
+<span class="n">x_var</span><span class="p">.</span><span class="n">pop</span><span class="p">()</span>
+<span class="n">columnas</span> <span class="o">=</span> <span class="n">x_var</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">food</span><span class="p">[</span><span class="n">columnas</span><span class="p">]</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">food</span><span class="p">.</span><span class="n">Energy_kcal</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">train_X</span><span class="p">,</span> <span class="n">val_X</span><span class="p">,</span> <span class="n">train_Y</span><span class="p">,</span> <span class="n">val_Y</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">food_model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">food_model</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_X</span><span class="p">,</span> <span class="n">train_Y</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LinearRegression(copy_X=True, fit_intercept=True, n_jobs=None, normalize=False)
+</code></pre></div></div>
+
+<h2 id="resultados">Resultados</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">inter</span> <span class="o">=</span> <span class="n">food_model</span><span class="p">.</span><span class="n">intercept_</span>
+<span class="n">protein</span><span class="p">,</span> <span class="n">fat</span><span class="p">,</span> <span class="n">carb</span> <span class="o">=</span> <span class="n">food_model</span><span class="p">.</span><span class="n">coef_</span>
+<span class="n">R2</span> <span class="o">=</span> <span class="n">food_model</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">train_X</span><span class="p">,</span> <span class="n">train_Y</span><span class="p">)</span>
+<span class="n">predicciones</span> <span class="o">=</span> <span class="n">food_model</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">val_X</span><span class="p">)</span>
+<span class="n">MAE</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">val_Y</span><span class="p">,</span> <span class="n">predicciones</span><span class="p">)</span>
+<span class="n">MSE</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">val_Y</span><span class="p">,</span> <span class="n">predicciones</span><span class="p">)</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">val_Y</span><span class="p">,</span> <span class="n">predicciones</span><span class="p">)</span>
+<span class="n">RMSE</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">MSE</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Así que la ecuación que describe nuestros datos de entrenamiento es:</p>
+
+<p><span class="MathJax" id="MathJax-Element-10-Frame" tabindex="0" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;E&lt;/mi&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;/math&gt;" role="presentation" style="position: relative;"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-168" style="width: 2.111em; display: inline-block;"><span style="display: inline-block; position: relative; width: 1.701em; height: 0px; font-size: 122%;"><span style="position: absolute; clip: rect(1.642em, 1001.64em, 2.638em, -999.997em); top: -2.456em; left: 0em;"><span class="mrow" id="MathJax-Span-169"><span class="mi" id="MathJax-Span-170" style="font-family: STIXMathJax_Normal-italic;">𝐸<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.003em;"></span></span><span class="mo" id="MathJax-Span-171" style="font-family: STIXMathJax_Main; padding-left: 0.296em;">=</span></span><span style="display: inline-block; width: 0px; height: 2.462em;"></span></span></span><span style="display: inline-block; overflow: hidden; vertical-align: -0.068em; border-left: 0px solid; width: 0px; height: 0.932em;"></span></span></nobr><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"></math></span></span><span class="MathJax_Preview" style="color: inherit;"></span><script type="math/tex" id="MathJax-Element-10">E =</script> <span id="python_f0ff9f84fb194aec88ca625e91a00cde_411">0.00416895981208666</span> <span class="MathJax_Preview" style="color: inherit;"></span><span class="MathJax" id="MathJax-Element-11-Frame" tabindex="0" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mfrac&gt;&lt;mrow&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;mi&gt;c&lt;/mi&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mi&gt;l&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow&gt;&lt;mi&gt;m&lt;/mi&gt;&lt;mi&gt;g&lt;/mi&gt;&lt;/mrow&gt;&lt;/mfrac&gt;&lt;mo&gt;&amp;#x2217;&lt;/mo&gt;&lt;mi&gt;P&lt;/mi&gt;&lt;/math&gt;" role="presentation" style="position: relative;"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-172" style="width: 4.101em; display: inline-block;"><span style="display: inline-block; position: relative; width: 3.34em; height: 0px; font-size: 122%;"><span style="position: absolute; clip: rect(1.408em, 1003.34em, 3.106em, -999.997em); top: -2.456em; left: 0em;"><span class="mrow" id="MathJax-Span-173"><span class="mfrac" id="MathJax-Span-174"><span style="display: inline-block; position: relative; width: 1.408em; height: 0px; margin-right: 0.12em; margin-left: 0.12em;"><span style="position: absolute; clip: rect(3.34em, 1001.23em, 4.16em, -999.997em); top: -4.388em; left: 50%; margin-left: -0.641em;"><span class="mrow" id="MathJax-Span-175"><span class="mi" id="MathJax-Span-176" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑘</span><span class="mi" id="MathJax-Span-177" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑐</span><span class="mi" id="MathJax-Span-178" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑎</span><span class="mi" id="MathJax-Span-179" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑙</span></span><span style="display: inline-block; width: 0px; height: 3.984em;"></span></span><span style="position: absolute; clip: rect(3.516em, 1000.88em, 4.277em, -999.997em); top: -3.627em; left: 50%; margin-left: -0.407em;"><span class="mrow" id="MathJax-Span-180"><span class="mi" id="MathJax-Span-181" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑚</span><span class="mi" id="MathJax-Span-182" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑔</span></span><span style="display: inline-block; width: 0px; height: 3.984em;"></span></span><span style="position: absolute; clip: rect(0.823em, 1001.41em, 1.232em, -999.997em); top: -1.285em; left: 0em;"><span style="display: inline-block; overflow: hidden; vertical-align: 0em; border-top: 1.3px solid; width: 1.408em; height: 0px;"></span><span style="display: inline-block; width: 0px; height: 1.057em;"></span></span></span></span><span class="mo" id="MathJax-Span-183" style="font-family: STIXMathJax_Main; padding-left: 0.237em;"></span><span class="mi" id="MathJax-Span-184" style="font-family: STIXMathJax_Normal-italic; padding-left: 0.237em;">𝑃<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.12em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.462em;"></span></span></span><span style="display: inline-block; overflow: hidden; vertical-align: -0.639em; border-left: 0px solid; width: 0px; height: 1.861em;"></span></span></nobr><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow></mrow></mfrac></math></span></span><script type="math/tex" id="MathJax-Element-11">\frac{kcal}{mg} P</script> + <span id="python_f0ff9f84fb194aec88ca625e91a00cde_1535">0.008824270741403904</span><span class="MathJax_Preview" style="color: inherit;"></span><span class="MathJax" id="MathJax-Element-12-Frame" tabindex="0" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mfrac&gt;&lt;mrow&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;mi&gt;c&lt;/mi&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mi&gt;l&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow&gt;&lt;mi&gt;m&lt;/mi&gt;&lt;mi&gt;g&lt;/mi&gt;&lt;/mrow&gt;&lt;/mfrac&gt;&lt;mo&gt;&amp;#x2217;&lt;/mo&gt;&lt;mi&gt;F&lt;/mi&gt;&lt;/math&gt;" role="presentation" style="position: relative;"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-185" style="width: 4.16em; display: inline-block;"><span style="display: inline-block; position: relative; width: 3.399em; height: 0px; font-size: 122%;"><span style="position: absolute; clip: rect(1.408em, 1003.4em, 3.106em, -999.997em); top: -2.456em; left: 0em;"><span class="mrow" id="MathJax-Span-186"><span class="mfrac" id="MathJax-Span-187"><span style="display: inline-block; position: relative; width: 1.408em; height: 0px; margin-right: 0.12em; margin-left: 0.12em;"><span style="position: absolute; clip: rect(3.34em, 1001.23em, 4.16em, -999.997em); top: -4.388em; left: 50%; margin-left: -0.641em;"><span class="mrow" id="MathJax-Span-188"><span class="mi" id="MathJax-Span-189" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑘</span><span class="mi" id="MathJax-Span-190" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑐</span><span class="mi" id="MathJax-Span-191" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑎</span><span class="mi" id="MathJax-Span-192" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑙</span></span><span style="display: inline-block; width: 0px; height: 3.984em;"></span></span><span style="position: absolute; clip: rect(3.516em, 1000.88em, 4.277em, -999.997em); top: -3.627em; left: 50%; margin-left: -0.407em;"><span class="mrow" id="MathJax-Span-193"><span class="mi" id="MathJax-Span-194" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑚</span><span class="mi" id="MathJax-Span-195" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑔</span></span><span style="display: inline-block; width: 0px; height: 3.984em;"></span></span><span style="position: absolute; clip: rect(0.823em, 1001.41em, 1.232em, -999.997em); top: -1.285em; left: 0em;"><span style="display: inline-block; overflow: hidden; vertical-align: 0em; border-top: 1.3px solid; width: 1.408em; height: 0px;"></span><span style="display: inline-block; width: 0px; height: 1.057em;"></span></span></span></span><span class="mo" id="MathJax-Span-196" style="font-family: STIXMathJax_Main; padding-left: 0.237em;"></span><span class="mi" id="MathJax-Span-197" style="font-family: STIXMathJax_Normal-italic; padding-left: 0.237em;">𝐹<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.12em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.462em;"></span></span></span><span style="display: inline-block; overflow: hidden; vertical-align: -0.639em; border-left: 0px solid; width: 0px; height: 1.861em;"></span></span></nobr><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"></math></span></span><script type="math/tex" id="MathJax-Element-12">\frac{kcal}{mg} F</script> + <span id="python_f0ff9f84fb194aec88ca625e91a00cde_2658">0.003871166382474922</span><span class="MathJax_Preview" style="color: inherit;"></span><span class="MathJax" id="MathJax-Element-13-Frame" tabindex="0" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mfrac&gt;&lt;mrow&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;mi&gt;c&lt;/mi&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mi&gt;l&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow&gt;&lt;mi&gt;m&lt;/mi&gt;&lt;mi&gt;g&lt;/mi&gt;&lt;/mrow&gt;&lt;/mfrac&gt;&lt;mo&gt;&amp;#x2217;&lt;/mo&gt;&lt;mi&gt;C&lt;/mi&gt;&lt;/math&gt;" role="presentation" style="position: relative;"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-198" style="width: 4.16em; display: inline-block;"><span style="display: inline-block; position: relative; width: 3.399em; height: 0px; font-size: 122%;"><span style="position: absolute; clip: rect(1.408em, 1003.4em, 3.106em, -999.997em); top: -2.456em; left: 0em;"><span class="mrow" id="MathJax-Span-199"><span class="mfrac" id="MathJax-Span-200"><span style="display: inline-block; position: relative; width: 1.408em; height: 0px; margin-right: 0.12em; margin-left: 0.12em;"><span style="position: absolute; clip: rect(3.34em, 1001.23em, 4.16em, -999.997em); top: -4.388em; left: 50%; margin-left: -0.641em;"><span class="mrow" id="MathJax-Span-201"><span class="mi" id="MathJax-Span-202" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑘</span><span class="mi" id="MathJax-Span-203" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑐</span><span class="mi" id="MathJax-Span-204" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑎</span><span class="mi" id="MathJax-Span-205" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑙</span></span><span style="display: inline-block; width: 0px; height: 3.984em;"></span></span><span style="position: absolute; clip: rect(3.516em, 1000.88em, 4.277em, -999.997em); top: -3.627em; left: 50%; margin-left: -0.407em;"><span class="mrow" id="MathJax-Span-206"><span class="mi" id="MathJax-Span-207" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑚</span><span class="mi" id="MathJax-Span-208" style="font-size: 70.7%; font-family: STIXMathJax_Normal-italic;">𝑔</span></span><span style="display: inline-block; width: 0px; height: 3.984em;"></span></span><span style="position: absolute; clip: rect(0.823em, 1001.41em, 1.232em, -999.997em); top: -1.285em; left: 0em;"><span style="display: inline-block; overflow: hidden; vertical-align: 0em; border-top: 1.3px solid; width: 1.408em; height: 0px;"></span><span style="display: inline-block; width: 0px; height: 1.057em;"></span></span></span></span><span class="mo" id="MathJax-Span-209" style="font-family: STIXMathJax_Main; padding-left: 0.237em;"></span><span class="mi" id="MathJax-Span-210" style="font-family: STIXMathJax_Normal-italic; padding-left: 0.237em;">𝐶<span style="display: inline-block; overflow: hidden; height: 1px; width: 0.061em;"></span></span></span><span style="display: inline-block; width: 0px; height: 2.462em;"></span></span></span><span style="display: inline-block; overflow: hidden; vertical-align: -0.639em; border-left: 0px solid; width: 0px; height: 1.861em;"></span></span></nobr><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow></mrow></mfrac></math></span></span><script type="math/tex" id="MathJax-Element-13"> \frac{kcal}{mg} C </script> <span id="python_f0ff9f84fb194aec88ca625e91a00cde_3782">-0.05673766003476999</span> <span class="MathJax_Preview" style="color: inherit;"></span><span class="MathJax" id="MathJax-Element-14-Frame" tabindex="0" data-mathml="&lt;math xmlns=&quot;http://www.w3.org/1998/Math/MathML&quot;&gt;&lt;mi&gt;k&lt;/mi&gt;&lt;mi&gt;c&lt;/mi&gt;&lt;mi&gt;a&lt;/mi&gt;&lt;mi&gt;l&lt;/mi&gt;&lt;/math&gt;" role="presentation" style="position: relative;"><nobr aria-hidden="true"><span class="math" id="MathJax-Span-211" style="width: 2.169em; display: inline-block;"><span style="display: inline-block; position: relative; width: 1.759em; height: 0px; font-size: 122%;"><span style="position: absolute; clip: rect(1.467em, 1001.7em, 2.462em, -999.997em); top: -2.28em; left: 0em;"><span class="mrow" id="MathJax-Span-212"><span class="mi" id="MathJax-Span-213" style="font-family: STIXMathJax_Normal-italic;">𝑘</span><span class="mi" id="MathJax-Span-214" style="font-family: STIXMathJax_Normal-italic;">𝑐</span><span class="mi" id="MathJax-Span-215" style="font-family: STIXMathJax_Normal-italic;">𝑎</span><span class="mi" id="MathJax-Span-216" style="font-family: STIXMathJax_Normal-italic;">𝑙</span></span><span style="display: inline-block; width: 0px; height: 2.286em;"></span></span></span><span style="display: inline-block; overflow: hidden; vertical-align: -0.068em; border-left: 0px solid; width: 0px; height: 1.004em;"></span></span></nobr><span class="MJX_Assistive_MathML" role="presentation"><math xmlns="http://www.w3.org/1998/Math/MathML"></math></span></span><script type="math/tex" id="MathJax-Element-14">     kcal</script></p>
+
+<p>Donde:</p>
+
+<ul>
+  <li>P =&gt; Proteina</li>
+  <li>F =&gt; Grasa</li>
+  <li>C =&gt; Carbohidratos</li>
+  <li>E =&gt; Energía</li>
+</ul>
+
+<p>Comparandolo los valores de prediccion y los valores del dataset tenemos un</p>
+
+<p><strong>MAE = 5.661038425222942 kcal</strong></p>
+
+<p><strong>MSE = 97.72836156730865 kcal²</strong></p>
+
+<p><strong>RMSE = 9.885765603498227 kcal</strong></p>
+
+<p><strong>R² = 0.9967791746734015</strong></p>
+
+<h2 id="conclusiones">Conclusiones</h2>
+
+<p>Nuestra hipótesis es correcta, existe correlación entre tres variables de nuestro dataset y la variable energía.</p>
+
+<p>Revisando la literatura pude encontrar que nutriólogos y cientificos relacionados en el área de la alimentación y nutrición utilizan tres constantes para determinar el contenido calórico de los alimentos, estos números coinciden con los resultados obtenidos en nuestro modelo.</p>
+
+<p>En cuánto a los resultados de nuestro modelo, podemos observar que el error es mínimo, no solo para los datos de entrenamiento, si no también para los datos de predicción.</p>
+
+<p>El modelo es altamente efectivo para la predicción de contenido energético en los alimentos. Únicamente necesitamos saber las grasas, carbohidratos y proteínas para calcular las calorías del alimento de una manera indirecta.</p>
+
+<h2 id="referencias">Referencias</h2>
+
+<p>Lopategui, Corsino, E. (2002). saludmen.com . http://www.saludmed.com/CtrlPeso/BalEnerg/BalEnerg.html</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
+
+</div>
+
+
+<div class="related">
+  <h2>Related posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2020/04/03/introducing-lanyon/">
+            Introducing Lanyon
+            <small>03 Apr 2020</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2020/04/02/example-content/">
+            Example content
+            <small>02 Apr 2020</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2020/04/01/whats-jekyll/">
+            What's Jekyll?
+            <small>01 Apr 2020</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script src='/public/js/script.js'></script>
+  </body>
+</html>
